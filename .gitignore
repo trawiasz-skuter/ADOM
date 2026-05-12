@@ -1,0 +1,19 @@
+# Wirtualne środowisko i pakiety
+.venv/
+env/
+venv/
+__pycache__/
+*.pyc
+
+# Pliki systemowe
+.DS_Store
+
+# Pobrane wagi modeli PyTorch (są za duże na GitHub)
+*.pth
+*.pt
+
+# Wygenerowane pliki i maski z testów
+Dataset/*_OUT.png
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
