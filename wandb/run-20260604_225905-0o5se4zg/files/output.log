@@ -1,0 +1,88 @@
+INFO: Starting training:
+        Epochs:          10
+        Batch size:      1
+        Learning rate:   1e-05
+        Training size:   190
+        Validation size: 21
+        Checkpoints:     True
+        Device:          mps
+        Target Size:     128x128
+        Loss Type:       bce
+        Augmentation:    False
+        Mixed Precision: False
+
+/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py:85: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
+Epoch 1/10:   0%|                                                                                          | 0/190 [00:00<?, ?img/s]/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py:1118: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Epoch 1/10:  20%|████████████▏                                                | 38/190 [00:21<00:08, 18.92img/s, loss (batch)=0.395]INFO: Validation Dice score: 0.5713309645652771
+[34m[1mwandb[0m: [33mWARNING[0m Data passed to `wandb.Image` should consist of values in the range [0, 255], image data will be normalized to this range, but behavior will be removed in a future version of wandb.
+Epoch 1/10:  40%|████████████████████████▍                                    | 76/190 [01:21<00:07, 15.62img/s, loss (batch)=0.319]INFO: Validation Dice score: 0.5391199588775635
+Epoch 1/10:  60%|████████████████████████████████████                        | 114/190 [02:21<00:05, 14.98img/s, loss (batch)=0.555]INFO: Validation Dice score: 0.5634598731994629
+Epoch 1/10:  80%|████████████████████████████████████████████████            | 152/190 [03:11<00:02, 15.64img/s, loss (batch)=0.258]INFO: Validation Dice score: 0.8208723664283752
+Epoch 1/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:11<00:00, 15.73img/s, loss (batch)=0.528]INFO: Validation Dice score: 0.8393516540527344
+Epoch 1/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:41<00:00,  1.80s/img, loss (batch)=0.528]
+INFO: Checkpoint 1 saved!
+Epoch 2/10:  20%|████████████▏                                                | 38/190 [00:19<00:07, 19.07img/s, loss (batch)=0.136]INFO: Validation Dice score: 0.888730525970459
+Epoch 2/10:  40%|████████████████████████▍                                    | 76/190 [01:19<00:07, 15.58img/s, loss (batch)=0.124]INFO: Validation Dice score: 0.9254517555236816
+Epoch 2/10:  60%|████████████████████████████████████                        | 114/190 [02:09<00:04, 15.57img/s, loss (batch)=0.329]INFO: Validation Dice score: 0.9036880731582642
+Epoch 2/10:  80%|████████████████████████████████████████████████            | 152/190 [03:09<00:02, 14.87img/s, loss (batch)=0.438]INFO: Validation Dice score: 0.8953734040260315
+Epoch 2/10: 100%|█████████████████████████████████████████████████████████████| 190/190 [04:09<00:00, 15.42img/s, loss (batch)=0.32]INFO: Validation Dice score: 0.912272036075592
+Epoch 2/10: 100%|█████████████████████████████████████████████████████████████| 190/190 [05:37<00:00,  1.77s/img, loss (batch)=0.32]
+INFO: Checkpoint 2 saved!
+Epoch 3/10:  20%|████████████▏                                                | 38/190 [00:22<00:07, 19.42img/s, loss (batch)=0.382]INFO: Validation Dice score: 0.9301178455352783
+Epoch 3/10:  40%|████████████████████████▍                                    | 76/190 [01:12<00:07, 15.50img/s, loss (batch)=0.175]INFO: Validation Dice score: 0.9266360998153687
+Epoch 3/10:  60%|████████████████████████████████████                        | 114/190 [02:12<00:04, 15.39img/s, loss (batch)=0.195]INFO: Validation Dice score: 0.9289171099662781
+Epoch 3/10:  80%|████████████████████████████████████████████████            | 152/190 [03:12<00:02, 15.50img/s, loss (batch)=0.181]INFO: Validation Dice score: 0.9433499574661255
+Epoch 3/10: 100%|██████████████████████████████████████████████████████████████| 190/190 [04:02<00:00, 15.63img/s, loss (batch)=0.2]INFO: Validation Dice score: 0.9413845539093018
+Epoch 3/10: 100%|██████████████████████████████████████████████████████████████| 190/190 [05:36<00:00,  1.77s/img, loss (batch)=0.2]
+INFO: Checkpoint 3 saved!
+Epoch 4/10:  20%|████████████▏                                                | 38/190 [00:16<00:07, 19.36img/s, loss (batch)=0.422]INFO: Validation Dice score: 0.9373080730438232
+Epoch 4/10:  40%|████████████████████████▍                                    | 76/190 [01:16<00:07, 15.40img/s, loss (batch)=0.113]INFO: Validation Dice score: 0.933515191078186
+Epoch 4/10:  60%|████████████████████████████████████                        | 114/190 [02:16<00:04, 15.38img/s, loss (batch)=0.106]INFO: Validation Dice score: 0.9367024302482605
+Epoch 4/10:  80%|████████████████████████████████████████████████            | 152/190 [03:06<00:02, 13.23img/s, loss (batch)=0.151]INFO: Validation Dice score: 0.9243462085723877
+Epoch 4/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:06<00:00, 14.52img/s, loss (batch)=0.673]INFO: Validation Dice score: 0.9391732215881348
+Epoch 4/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:37<00:00,  1.77s/img, loss (batch)=0.673]
+INFO: Checkpoint 4 saved!
+Epoch 5/10:  20%|████████████▏                                                | 38/190 [00:19<00:08, 17.94img/s, loss (batch)=0.175]INFO: Validation Dice score: 0.931300938129425
+Epoch 5/10:  40%|████████████████████████                                    | 76/190 [01:19<00:07, 14.96img/s, loss (batch)=0.0889]INFO: Validation Dice score: 0.9385563731193542
+Epoch 5/10:  60%|████████████████████████████████████▌                        | 114/190 [02:19<00:05, 14.69img/s, loss (batch)=0.25]INFO: Validation Dice score: 0.9202589988708496
+Epoch 5/10:  80%|████████████████████████████████████████████████▊            | 152/190 [03:09<00:02, 14.69img/s, loss (batch)=0.19]INFO: Validation Dice score: 0.922162652015686
+Epoch 5/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:09<00:00, 14.95img/s, loss (batch)=0.126]INFO: Validation Dice score: 0.9321781992912292
+Epoch 5/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:38<00:00,  1.78s/img, loss (batch)=0.126]
+INFO: Checkpoint 5 saved!
+Epoch 6/10:  20%|████████████▏                                                | 38/190 [00:20<00:08, 18.14img/s, loss (batch)=0.114]INFO: Validation Dice score: 0.9077793955802917
+Epoch 6/10:  40%|████████████████████████▍                                    | 76/190 [01:20<00:07, 14.77img/s, loss (batch)=0.102]INFO: Validation Dice score: 0.9021575450897217
+Epoch 6/10:  60%|███████████████████████████████████▍                       | 114/190 [02:10<00:05, 14.71img/s, loss (batch)=0.0761]INFO: Validation Dice score: 0.9200003743171692
+Epoch 6/10:  80%|███████████████████████████████████████████████▏           | 152/190 [03:10<00:02, 14.81img/s, loss (batch)=0.0869]INFO: Validation Dice score: 0.9324512481689453
+Epoch 6/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:10<00:00, 14.96img/s, loss (batch)=0.116]INFO: Validation Dice score: 0.9304892420768738
+Epoch 6/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:38<00:00,  1.78s/img, loss (batch)=0.116]
+INFO: Checkpoint 6 saved!
+Epoch 7/10:  20%|████████████                                                | 38/190 [00:21<00:07, 19.46img/s, loss (batch)=0.0827]INFO: Validation Dice score: 0.9378393888473511
+Epoch 7/10:  40%|████████████████████████▍                                    | 76/190 [01:21<00:07, 14.35img/s, loss (batch)=0.109]INFO: Validation Dice score: 0.9090219140052795
+Epoch 7/10:  60%|███████████████████████████████████▍                       | 114/190 [02:11<00:04, 15.53img/s, loss (batch)=0.0745]INFO: Validation Dice score: 0.9291542768478394
+Epoch 7/10:  80%|████████████████████████████████████████████████            | 152/190 [03:11<00:02, 15.59img/s, loss (batch)=0.245]INFO: Validation Dice score: 0.9181381464004517
+Epoch 7/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:01<00:00, 14.41img/s, loss (batch)=0.119]INFO: Validation Dice score: 0.9204214811325073
+Epoch 7/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:36<00:00,  1.77s/img, loss (batch)=0.119]
+INFO: Checkpoint 7 saved!
+Epoch 8/10:  20%|████████████▏                                                | 38/190 [00:25<00:07, 19.42img/s, loss (batch)=0.129]INFO: Validation Dice score: 0.9324422478675842
+Epoch 8/10:  40%|████████████████████████▍                                    | 76/190 [01:15<00:07, 14.33img/s, loss (batch)=0.158]INFO: Validation Dice score: 0.9399272203445435
+Epoch 8/10:  60%|████████████████████████████████████                        | 114/190 [02:15<00:04, 15.47img/s, loss (batch)=0.125]INFO: Validation Dice score: 0.9321136474609375
+Epoch 8/10:  80%|████████████████████████████████████████████████            | 152/190 [03:05<00:02, 14.34img/s, loss (batch)=0.131]INFO: Validation Dice score: 0.9272324442863464
+Epoch 8/10: 100%|████████████████████████████████████████████████████████████| 190/190 [04:05<00:00, 15.28img/s, loss (batch)=0.105]INFO: Validation Dice score: 0.9081752300262451
+Epoch 8/10: 100%|████████████████████████████████████████████████████████████| 190/190 [05:36<00:00,  1.77s/img, loss (batch)=0.105]
+INFO: Checkpoint 8 saved!
+Epoch 9/10:  20%|████████████▏                                                | 38/190 [00:19<00:07, 19.18img/s, loss (batch)=0.158]INFO: Validation Dice score: 0.9229318499565125
+Epoch 9/10:  40%|████████████████████████▍                                    | 76/190 [01:19<00:07, 14.34img/s, loss (batch)=0.137]INFO: Validation Dice score: 0.9154428839683533
+Epoch 9/10:  60%|███████████████████████████████████▍                       | 114/190 [02:09<00:05, 14.37img/s, loss (batch)=0.0918]INFO: Validation Dice score: 0.9307949542999268
+Epoch 9/10:  80%|███████████████████████████████████████████████▏           | 152/190 [03:09<00:02, 15.36img/s, loss (batch)=0.0685]INFO: Validation Dice score: 0.9359597563743591
+Epoch 9/10: 100%|███████████████████████████████████████████████████████████| 190/190 [04:09<00:00, 15.64img/s, loss (batch)=0.0713]INFO: Validation Dice score: 0.9227384924888611
+Epoch 9/10: 100%|███████████████████████████████████████████████████████████| 190/190 [05:36<00:00,  1.77s/img, loss (batch)=0.0713]
+INFO: Checkpoint 9 saved!
+Epoch 10/10:  20%|███████████▊                                               | 38/190 [00:22<00:07, 19.42img/s, loss (batch)=0.0859]INFO: Validation Dice score: 0.937130331993103
+Epoch 10/10:  40%|████████████████████████                                    | 76/190 [01:12<00:07, 15.43img/s, loss (batch)=0.127]INFO: Validation Dice score: 0.9245466589927673
+Epoch 10/10:  60%|████████████████████████████████████                        | 114/190 [02:12<00:04, 15.47img/s, loss (batch)=0.12]INFO: Validation Dice score: 0.9160696864128113
+Epoch 10/10:  80%|███████████████████████████████████████████████▏           | 152/190 [03:12<00:02, 14.38img/s, loss (batch)=0.133]INFO: Validation Dice score: 0.9348403215408325
+Epoch 10/10: 100%|███████████████████████████████████████████████████████████| 190/190 [04:02<00:00, 14.77img/s, loss (batch)=0.104]INFO: Validation Dice score: 0.9407325983047485
+Epoch 10/10: 100%|███████████████████████████████████████████████████████████| 190/190 [05:37<00:00,  1.77s/img, loss (batch)=0.104]
+INFO: Checkpoint 10 saved!

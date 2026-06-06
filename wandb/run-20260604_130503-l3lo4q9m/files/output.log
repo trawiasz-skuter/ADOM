@@ -1,0 +1,40 @@
+INFO: Starting training:
+        Epochs:          10
+        Batch size:      1
+        Learning rate:   1e-05
+        Training size:   190
+        Validation size: 21
+        Checkpoints:     True
+        Device:          mps
+        Images scaling:  0.5
+        Mixed Precision: False
+
+/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py:80: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
+Epoch 1/10:   0%|                                                                                          | 0/190 [00:00<?, ?img/s]/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py:1118: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Epoch 1/10:   0%|                                                                                          | 0/190 [00:18<?, ?img/s]
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 215, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 114, in train_model
+    grad_scaler.scale(loss).backward()
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/_tensor.py", line 631, in backward
+    torch.autograd.backward(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/autograd/__init__.py", line 381, in backward
+    _engine_run_backward(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/autograd/graph.py", line 869, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 215, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 114, in train_model
+    grad_scaler.scale(loss).backward()
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/_tensor.py", line 631, in backward
+    torch.autograd.backward(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/autograd/__init__.py", line 381, in backward
+    _engine_run_backward(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/autograd/graph.py", line 869, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.

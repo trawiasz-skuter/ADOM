@@ -17,3 +17,12 @@ Dataset/*_OUT.png
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# Ignoruj zawartość Dataset i Models, ale zachowaj strukturę folderów dla GitHuba
+Dataset/**
+!Dataset/**/
+!Dataset/**/.gitkeep
+
+Models/**
+!Models/**/
+!Models/**/.gitkeep

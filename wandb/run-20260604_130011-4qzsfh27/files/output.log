@@ -1,0 +1,44 @@
+INFO: Starting training:
+        Epochs:          10
+        Batch size:      2
+        Learning rate:   1e-05
+        Training size:   190
+        Validation size: 21
+        Checkpoints:     True
+        Device:          cpu
+        Images scaling:  0.5
+        Mixed Precision: False
+
+/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py:80: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
+Epoch 1/10:   0%|                                                                                          | 0/190 [00:00<?, ?img/s]/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py:1118: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+Epoch 1/10:   0%|                                                                                          | 0/190 [00:22<?, ?img/s]
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 215, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 106, in train_model
+    loss = criterion(masks_pred, true_masks)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/loss.py", line 1394, in forward
+    return F.cross_entropy(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/functional.py", line 3504, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(
+IndexError: Target 4 is out of bounds.
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 215, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 106, in train_model
+    loss = criterion(masks_pred, true_masks)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/modules/loss.py", line 1394, in forward
+    return F.cross_entropy(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/.venv/lib/python3.10/site-packages/torch/nn/functional.py", line 3504, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(
+IndexError: Target 4 is out of bounds.

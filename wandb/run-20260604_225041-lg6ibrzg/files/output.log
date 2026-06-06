@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 236, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 64, in train_model
+    val_percent=val_percent, save_checkpoint=save_checkpoint, img_scale=img_scale, amp=amp)
+NameError: name 'img_scale' is not defined
+Traceback (most recent call last):
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 236, in <module>
+    train_model(
+  File "/Users/jakubmatkowski/Dokumenty/PW_repos/ADOM/train.py", line 64, in train_model
+    val_percent=val_percent, save_checkpoint=save_checkpoint, img_scale=img_scale, amp=amp)
+NameError: name 'img_scale' is not defined

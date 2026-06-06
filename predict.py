@@ -9,16 +9,15 @@ from PIL import Image
 from torchvision import transforms
 
 from utils.data_loading import BasicDataset
-from unet import UNet
 from utils.utils import plot_img_and_mask
 
 def predict_img(net,
                 full_img,
                 device,
-                scale_factor=1,
+                target_size=128,
                 out_threshold=0.5):
     net.eval()
-    img = torch.from_numpy(BasicDataset.preprocess(None, full_img, scale_factor, is_mask=False))
+    img = torch.from_numpy(BasicDataset.preprocess(None, full_img, target_size, is_mask=False))
     img = img.unsqueeze(0)
     img = img.to(device=device, dtype=torch.float32)
 
@@ -44,8 +43,8 @@ def get_args():
     parser.add_argument('--no-save', '-n', action='store_true', help='Do not save the output masks')
     parser.add_argument('--mask-threshold', '-t', type=float, default=0.5,
                         help='Minimum probability value to consider a mask pixel white')
-    parser.add_argument('--scale', '-s', type=float, default=0.5,
-                        help='Scale factor for the input images')
+    parser.add_argument('--size', '-s', type=int, default=128,
+                        help='Target size for the input images')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
     
@@ -102,7 +101,7 @@ if __name__ == '__main__':
 
         mask = predict_img(net=net,
                            full_img=img,
-                           scale_factor=args.scale,
+                           target_size=args.size,
                            out_threshold=args.mask_threshold,
                            device=device)
 

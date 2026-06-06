@@ -36,11 +36,11 @@ def unique_mask_values(idx, mask_dir, mask_suffix):
 
 
 class BasicDataset(Dataset):
-    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):
+    def __init__(self, images_dir: str, mask_dir: str, target_size: int = 128, augment: bool = False, mask_suffix: str = ''):
         self.images_dir = Path(images_dir)
         self.mask_dir = Path(mask_dir)
-        assert 0 < scale <= 1, 'Scale must be between 0 and 1'
-        self.scale = scale
+        self.target_size = target_size
+        self.augment = augment
         self.mask_suffix = mask_suffix
 
         self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
@@ -62,10 +62,8 @@ class BasicDataset(Dataset):
         return len(self.ids)
 
     @staticmethod
-    def preprocess(mask_values, pil_img, scale, is_mask):
-        w, h = pil_img.size
-        newW, newH = int(scale * w), int(scale * h)
-        assert newW > 0 and newH > 0, 'Scale is too small, resized images would have no pixel'
+    def preprocess(mask_values, pil_img, target_size, is_mask):
+        newW, newH = target_size, target_size
         pil_img = pil_img.resize((newW, newH), resample=Image.NEAREST if is_mask else Image.BICUBIC)
         img = np.asarray(pil_img)
 
@@ -88,6 +86,11 @@ class BasicDataset(Dataset):
             if (img > 1).any():
                 img = img / 255.0
 
+            # Apply ImageNet normalization for pre-trained SMP models
+            mean = np.array([0.485, 0.456, 0.406]).reshape(3, 1, 1)
+            std = np.array([0.229, 0.224, 0.225]).reshape(3, 1, 1)
+            img = (img - mean) / std
+
             return img
 
     def __getitem__(self, idx):
@@ -99,12 +102,21 @@ class BasicDataset(Dataset):
         assert len(mask_file) == 1, f'Either no mask or multiple masks found for the ID {name}: {mask_file}'
         mask = load_image(mask_file[0])
         img = load_image(img_file[0])
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
 
         assert img.size == mask.size, \
             f'Image and mask {name} should be the same size, but are {img.size} and {mask.size}'
 
-        img = self.preprocess(self.mask_values, img, self.scale, is_mask=False)
-        mask = self.preprocess(self.mask_values, mask, self.scale, is_mask=True)
+        if self.augment:
+            import random
+            from torchvision.transforms.functional import hflip
+            if random.random() > 0.5:
+                img = hflip(img)
+                mask = hflip(mask)
+
+        img = self.preprocess(self.mask_values, img, self.target_size, is_mask=False)
+        mask = self.preprocess(self.mask_values, mask, self.target_size, is_mask=True)
 
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
@@ -113,5 +125,5 @@ class BasicDataset(Dataset):
 
 
 class CarvanaDataset(BasicDataset):
-    def __init__(self, images_dir, mask_dir, scale=1):
-        super().__init__(images_dir, mask_dir, scale, mask_suffix='_mask')
+    def __init__(self, images_dir, mask_dir, target_size=128, augment=False):
+        super().__init__(images_dir, mask_dir, target_size, augment, mask_suffix='_mask')

@@ -16,11 +16,12 @@ from tqdm import tqdm
 import wandb
 from evaluate import evaluate
 from unet import UNet
+import segmentation_models_pytorch as smp
 from utils.data_loading import BasicDataset, CarvanaDataset
 from utils.dice_score import dice_loss
 
-dir_img = Path('./data/imgs/')
-dir_mask = Path('./data/masks/')
+dir_img = Path('./Dataset/car-segmentation/images/')
+dir_mask = Path('./Dataset/car-segmentation/masks/')
 dir_checkpoint = Path('./checkpoints/')
 
 
@@ -32,7 +33,9 @@ def train_model(
         learning_rate: float = 1e-5,
         val_percent: float = 0.1,
         save_checkpoint: bool = True,
-        img_scale: float = 0.5,
+        target_size: int = 128,
+        loss_type: str = 'bce',
+        augment: bool = False,
         amp: bool = False,
         weight_decay: float = 1e-8,
         momentum: float = 0.999,
@@ -40,9 +43,9 @@ def train_model(
 ):
     # 1. Create dataset
     try:
-        dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
+        dataset = CarvanaDataset(dir_img, dir_mask, target_size=target_size, augment=augment)
     except (AssertionError, RuntimeError, IndexError):
-        dataset = BasicDataset(dir_img, dir_mask, img_scale)
+        dataset = BasicDataset(dir_img, dir_mask, target_size=target_size, augment=augment)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -58,7 +61,7 @@ def train_model(
     experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
     experiment.config.update(
         dict(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate,
-             val_percent=val_percent, save_checkpoint=save_checkpoint, img_scale=img_scale, amp=amp)
+             val_percent=val_percent, save_checkpoint=save_checkpoint, target_size=target_size, augment=augment, loss_type=loss_type, amp=amp)
     )
 
     logging.info(f'''Starting training:
@@ -69,7 +72,9 @@ def train_model(
         Validation size: {n_val}
         Checkpoints:     {save_checkpoint}
         Device:          {device.type}
-        Images scaling:  {img_scale}
+        Target Size:     {target_size}x{target_size}
+        Loss Type:       {loss_type}
+        Augmentation:    {augment}
         Mixed Precision: {amp}
     ''')
 
@@ -78,7 +83,11 @@ def train_model(
                               lr=learning_rate, weight_decay=weight_decay, momentum=momentum, foreach=True)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize Dice score
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
-    criterion = nn.CrossEntropyLoss() if model.n_classes > 1 else nn.BCEWithLogitsLoss()
+    if loss_type == 'dice':
+        import segmentation_models_pytorch as smp
+        criterion = smp.losses.DiceLoss(mode='multiclass' if model.n_classes > 1 else 'binary')
+    else:
+        criterion = nn.CrossEntropyLoss() if model.n_classes > 1 else nn.BCEWithLogitsLoss()
     global_step = 0
 
     # 5. Begin training
@@ -94,8 +103,10 @@ def train_model(
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
                     'the images are loaded correctly.'
 
-                images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last if device.type != 'mps' else torch.contiguous_format)
                 true_masks = true_masks.to(device=device, dtype=torch.long)
+                if model.n_classes == 1:
+                    true_masks = (true_masks > 0).long()
 
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
@@ -174,12 +185,16 @@ def get_args():
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-5,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
-    parser.add_argument('--scale', '-s', type=float, default=0.5, help='Downscaling factor of the images')
+    parser.add_argument('--size', '-s', type=int, default=128, help='Target size of the images')
+    parser.add_argument('--loss', type=str, default='bce', choices=['bce', 'dice'], help='Loss function to use')
+    parser.add_argument('--augment', action='store_true', default=False, help='Enable data augmentation')
     parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
+    parser.add_argument('--img-dir', type=str, default=None, help='Directory containing images')
+    parser.add_argument('--mask-dir', type=str, default=None, help='Directory containing masks')
 
     return parser.parse_args()
 
@@ -188,14 +203,30 @@ if __name__ == '__main__':
     args = get_args()
 
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
     logging.info(f'Using device {device}')
+
+    if args.img_dir:
+        dir_img = Path(args.img_dir)
+    if args.mask_dir:
+        dir_mask = Path(args.mask_dir)
+
 
     # Change here to adapt to your data
     # n_channels=3 for RGB images
     # n_classes is the number of probabilities you want to get per pixel
-    model = UNet(n_channels=3, n_classes=args.classes, bilinear=args.bilinear)
-    model = model.to(memory_format=torch.channels_last)
+    model = smp.Unet(
+        encoder_name="resnet34",
+        encoder_weights="imagenet",
+        in_channels=3,
+        classes=args.classes,
+    )
+    # Patch attributes for compatibility with the rest of the script
+    model.n_channels = 3
+    model.n_classes = args.classes
+    model.bilinear = args.bilinear
+    if device.type != 'mps':
+        model = model.to(memory_format=torch.channels_last)
 
     logging.info(f'Network:\n'
                  f'\t{model.n_channels} input channels\n'
@@ -204,9 +235,11 @@ if __name__ == '__main__':
 
     if args.load:
         state_dict = torch.load(args.load, map_location=device)
-        del state_dict['mask_values']
+        if 'mask_values' in state_dict:
+            del state_dict['mask_values']
         model.load_state_dict(state_dict)
         logging.info(f'Model loaded from {args.load}')
+
 
     model.to(device=device)
     try:
@@ -216,7 +249,9 @@ if __name__ == '__main__':
             batch_size=args.batch_size,
             learning_rate=args.lr,
             device=device,
-            img_scale=args.scale,
+            target_size=args.size,
+            loss_type=args.loss,
+            augment=args.augment,
             val_percent=args.val / 100,
             amp=args.amp
         )
@@ -225,14 +260,17 @@ if __name__ == '__main__':
                       'Enabling checkpointing to reduce memory usage, but this slows down training. '
                       'Consider enabling AMP (--amp) for fast and memory efficient training')
         torch.cuda.empty_cache()
-        model.use_checkpointing()
+        if hasattr(model, 'use_checkpointing'):
+            model.use_checkpointing()
         train_model(
             model=model,
             epochs=args.epochs,
             batch_size=args.batch_size,
             learning_rate=args.lr,
             device=device,
-            img_scale=args.scale,
+            target_size=args.size,
+            loss_type=args.loss,
+            augment=args.augment,
             val_percent=args.val / 100,
             amp=args.amp
         )

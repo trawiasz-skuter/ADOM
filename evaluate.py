@@ -19,13 +19,14 @@ def evaluate(net, dataloader, device, amp):
             # move images and labels to correct device and type
             image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
             mask_true = mask_true.to(device=device, dtype=torch.long)
+            if net.n_classes == 1:
+                mask_true = (mask_true > 0).long()
 
             # predict the mask
             mask_pred = net(image)
 
             if net.n_classes == 1:
-                assert mask_true.min() >= 0 and mask_true.max() <= 1, 'True mask indices should be in [0, 1]'
-                mask_pred = (F.sigmoid(mask_pred) > 0.5).float()
+                mask_pred = (F.sigmoid(mask_pred.squeeze(1)) > 0.5).float()
                 # compute the Dice score
                 dice_score += dice_coeff(mask_pred, mask_true, reduce_batch_first=False)
             else:
