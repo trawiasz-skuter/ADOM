@@ -30,7 +30,7 @@ python predict.py -i Dataset/image.png -m unet_carvana_scale0.5_epoch2.pth -o Da
 ## Notatnik demonstracyjny
 
 Przygotowano plik `demo.ipynb`, który ładuje wybrane zdjęcie, skaluje je do 128x128 pikseli, a następnie przepuszcza przez wytrenowany model i wizualizuje wynik predykcji. 
-
+W pliku `demo.html` znajdują się wyniki eksperymentu wraz z ich opracowaniem.
 ## Trening
 
 Zdjęcia do treningu powinny znajdować się w `data/imgs/`, a odpowiadające im maski w `data/masks/`. 
